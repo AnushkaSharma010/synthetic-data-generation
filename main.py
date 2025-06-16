@@ -1,34 +1,47 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from routes import router
 from utils.gemini_model import GeminiModel
 import uvicorn
 import logging
 
+# Logging configuration
 logging.basicConfig(
-    level=logging.INFO,  # or DEBUG to get more details
+    level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler("app.log"),    # Log to a file named app.log
-        logging.StreamHandler()            # Also log to console (optional)
+        logging.FileHandler("app.log"),
+        logging.StreamHandler()
     ]
 )
+
 def create_app() -> FastAPI:
     app = FastAPI(
         title="Synthetic Data Generator",
         description="API for generating synthetic data using Gemini AI",
         version="1.0.0"
     )
-    
-    # Initialize services
+
+    # CORS for frontend (optional)
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],  # Change to your frontend URL in prod
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+
+    # Initialize Gemini
     GeminiModel.configure()
-    
-    # Include routes
+
+    # Mount routes
     app.include_router(router)
-    
+
     return app
 
+# Single instance
 app = create_app()
 
 if __name__ == "__main__":
-    app = create_app()
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    logging.info("Starting FastAPI server at http://localhost:8000 ...")
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
