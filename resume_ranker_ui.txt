@@ -1,0 +1,1768 @@
+html: 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Ranker AI | Smart Candidate Matching</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-gradient-primary fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <img src="ai-logo.png" alt="Resume Ranker AI" height="36" class="me-2">
+                <span class="fw-bold">Resume Ranker AI</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#upload-section">Analyze</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#how-it-works">How It Works</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">Features</a>
+                    </li>
+                </ul>
+                <div class="d-flex" id="auth-buttons">
+                    <button class="btn btn-outline-light me-2" data-bs-toggle="modal" data-bs-target="#loginModal">
+                        <i class="fas fa-sign-in-alt me-1"></i> Login
+                    </button>
+                    <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#signupModal">
+                        <i class="fas fa-user-plus me-1"></i> Sign Up
+                    </button>
+                </div>
+                <div class="d-flex align-items-center d-none" id="user-profile">
+                    <div class="position-relative">
+                        <span class="text-white me-2 fw-medium" id="username-display"></span>
+                        <div class="dropdown d-inline-block">
+                            <button class="btn btn-outline-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><button class="dropdown-item" id="logout-btn"><i class="fas fa-sign-out-alt me-2"></i>Logout</button></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Login to Your Account</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="login-form">
+                        <div class="mb-3">
+                            <label for="login-email" class="form-label">Email Address</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                <input type="email" class="form-control" id="login-email" placeholder="your@email.com" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="login-password" class="form-label">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                <input type="password" class="form-control" id="login-password" placeholder="••••••••" required>
+                                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="remember-me">
+                            <label class="form-check-label" for="remember-me">Remember me</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 py-2 fw-medium">
+                            <span class="spinner-border spinner-border-sm d-none me-2" id="login-spinner"></span>
+                            Login
+                        </button>
+                    </form>
+                    <div class="text-center mt-3">
+                        <a href="#" class="text-decoration-none">Forgot password?</a>
+                    </div>
+                    <hr class="my-4">
+                    <div class="text-center">
+                        <p class="mb-0">Don't have an account? <a href="#" class="text-primary fw-medium" data-bs-toggle="modal" data-bs-target="#signupModal" data-bs-dismiss="modal">Sign up</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div class="modal fade" id="signupModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Create New Account</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="signup-form">
+                        <div class="mb-3">
+                            <label for="signup-name" class="form-label">Full Name</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                <input type="text" class="form-control" id="signup-name" placeholder="John Doe" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="signup-email" class="form-label">Email Address</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                <input type="email" class="form-control" id="signup-email" placeholder="your@email.com" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="signup-password" class="form-label">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                <input type="password" class="form-control" id="signup-password" placeholder="••••••••" required>
+                                <button class="btn btn-outline-secondary" type="button" id="toggleSignupPassword">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="password-strength mt-2">
+                                <div class="progress" style="height: 4px;">
+                                    <div class="progress-bar" id="password-strength-bar" role="progressbar" style="width: 0%"></div>
+                                </div>
+                                <small class="text-muted" id="password-strength-text">Password strength</small>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="signup-confirm-password" class="form-label">Confirm Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                <input type="password" class="form-control" id="signup-confirm-password" placeholder="••••••••" required>
+                            </div>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="terms-agree" required>
+                            <label class="form-check-label" for="terms-agree">I agree to the <a href="#" class="text-primary">Terms of Service</a> and <a href="#" class="text-primary">Privacy Policy</a></label>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 py-2 fw-medium">
+                            <span class="spinner-border spinner-border-sm d-none me-2" id="signup-spinner"></span>
+                            Create Account
+                        </button>
+                    </form>
+                    <hr class="my-4">
+                    <div class="text-center">
+                        <p class="mb-0">Already have an account? <a href="#" class="text-primary fw-medium" data-bs-toggle="modal" data-bs-target="#loginModal" data-bs-dismiss="modal">Login</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-5 mb-lg-0">
+                    <h1 class="display-4 fw-bold mb-4 animate__animated animate__fadeInDown">Smart <span class="text-primary">Resume Matching</span> Powered by AI</h1>
+                    <p class="lead mb-4 animate__animated animate__fadeIn animate__delay-1s">Find the perfect candidates in minutes, not hours. Our advanced AI analyzes resumes and matches them with your job requirements.</p>
+                    <div class="d-flex flex-wrap gap-3 animate__animated animate__fadeIn animate__delay-2s">
+                        <button class="btn btn-primary btn-lg px-4 py-3 fw-medium" id="get-started-btn">
+                            <i class="fas fa-rocket me-2"></i> Get Started
+                        </button>
+                        <button class="btn btn-outline-primary btn-lg px-4 py-3 fw-medium" data-bs-toggle="modal" data-bs-target="#videoModal">
+                            <i class="fas fa-play-circle me-2"></i> Watch Demo
+                        </button>
+                    </div>
+                    <div class="d-flex align-items-center mt-4 animate__animated animate__fadeIn animate__delay-3s">
+                        <div class="d-flex">
+                            <img src="https://randomuser.me/api/portraits/women/44.jpg" class="rounded-circle border border-3 border-white" width="40" height="40" alt="User">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" class="rounded-circle border border-3 border-white ms-n2" width="40" height="40" alt="User">
+                            <img src="https://randomuser.me/api/portraits/women/68.jpg" class="rounded-circle border border-3 border-white ms-n2" width="40" height="40" alt="User">
+                        </div>
+                        <div class="ms-3">
+                            <div class="rating-stars text-warning">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <small class="text-muted">Trusted by 500+ recruiters</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="hero-image-container animate__animated animate__fadeInRight">
+                        <img src="ai-hero-image.png" alt="AI Resume Matching" class="img-fluid rounded-4 shadow-lg">
+                        <div class="floating-badge bg-primary text-white">
+                            <i class="fas fa-bolt me-1"></i> 95% Match Accuracy
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Upload Section -->
+    <section class="py-6 bg-light" id="upload-section">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="display-5 fw-bold mb-3">Analyze Resumes with AI</h2>
+                <p class="lead text-muted mx-auto" style="max-width: 700px;">Upload your job description and candidate resumes to get instant AI-powered matching results.</p>
+            </div>
+            
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card border-0 shadow-lg animate__animated animate__fadeIn">
+                        <div class="card-body p-4 p-md-5">
+                            <form id="upload-form">
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold fs-5 mb-3">Job Description</label>
+                                    <div class="d-flex gap-3 mb-3">
+                                        <div class="form-check flex-grow-1">
+                                            <input class="form-check-input" type="radio" name="jd-option" id="jd-file" checked>
+                                            <label class="form-check-label fw-medium" for="jd-file">
+                                                <i class="fas fa-file-upload me-2"></i> Upload File
+                                            </label>
+                                            <small class="d-block text-muted mt-1">PDF or DOCX (Max 5MB)</small>
+                                        </div>
+                                        <div class="form-check flex-grow-1">
+                                            <input class="form-check-input" type="radio" name="jd-option" id="jd-text">
+                                            <label class="form-check-label fw-medium" for="jd-text">
+                                                <i class="fas fa-align-left me-2"></i> Paste Text
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div id="jd-file-group">
+                                        <div class="file-upload-area p-4 border rounded-3 text-center">
+                                            <input type="file" class="d-none" id="jd-file-input" accept=".pdf,.docx">
+                                            <div class="mb-3">
+                                                <i class="fas fa-cloud-upload-alt text-primary fs-1"></i>
+                                            </div>
+                                            <h5 class="mb-2">Drag & drop your file here</h5>
+                                            <p class="text-muted mb-3">or</p>
+                                            <button type="button" class="btn btn-outline-primary" id="browse-jd-btn">
+                                                <i class="fas fa-folder-open me-2"></i> Browse Files
+                                            </button>
+                                            <div class="mt-3" id="jd-file-info"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <textarea class="form-control d-none mt-3" id="jd-text-input" rows="5" placeholder="Paste job description here..."></textarea>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold fs-5 mb-3">Candidate Resumes</label>
+                                    <div class="file-upload-area p-4 border rounded-3 text-center">
+                                        <input type="file" class="d-none" id="resumes-input" multiple accept=".pdf,.docx">
+                                        <div class="mb-3">
+                                            <i class="fas fa-file-alt text-primary fs-1"></i>
+                                        </div>
+                                        <h5 class="mb-2">Upload candidate resumes</h5>
+                                        <p class="text-muted mb-3">PDF or DOCX (Max 10 files, 5MB each)</p>
+                                        <button type="button" class="btn btn-outline-primary" id="browse-resumes-btn">
+                                            <i class="fas fa-folder-open me-2"></i> Select Files
+                                        </button>
+                                        <div class="mt-3" id="resumes-file-info"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-grid mt-4">
+                                    <button type="submit" class="btn btn-primary btn-lg py-3 fw-medium" id="upload-btn">
+                                        <span class="spinner-border spinner-border-sm d-none me-2" id="upload-spinner"></span>
+                                        <i class="fas fa-magic me-2"></i> Analyze & Match
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-6" id="features">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="display-5 fw-bold mb-3">Powerful Features</h2>
+                <p class="lead text-muted mx-auto" style="max-width: 700px;">Our AI-powered platform helps you streamline your hiring process with advanced capabilities.</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm hover-effect">
+                        <div class="card-body p-4 text-center">
+                            <div class="icon-circle bg-primary-light text-primary mb-4 mx-auto">
+                                <i class="fas fa-brain fs-3"></i>
+                            </div>
+                            <h4 class="mb-3">AI-Powered Matching</h4>
+                            <p class="text-muted">Advanced algorithms analyze and match resumes with job requirements based on skills, experience, and qualifications.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm hover-effect">
+                        <div class="card-body p-4 text-center">
+                            <div class="icon-circle bg-success-light text-success mb-4 mx-auto">
+                                <i class="fas fa-chart-bar fs-3"></i>
+                            </div>
+                            <h4 class="mb-3">Detailed Analytics</h4>
+                            <p class="text-muted">Comprehensive reports with match scores, skill gaps, and candidate comparisons to make informed decisions.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm hover-effect">
+                        <div class="card-body p-4 text-center">
+                            <div class="icon-circle bg-warning-light text-warning mb-4 mx-auto">
+                                <i class="fas fa-clock fs-3"></i>
+                            </div>
+                            <h4 class="mb-3">Time Saving</h4>
+                            <p class="text-muted">Reduce screening time by up to 80% by automatically identifying the most qualified candidates.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="py-6 bg-light" id="how-it-works">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="display-5 fw-bold mb-3">How It Works</h2>
+                <p class="lead text-muted mx-auto" style="max-width: 700px;">Simple steps to find your perfect candidates with AI-powered matching.</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4 class="mb-3">Upload Documents</h4>
+                            <p class="text-muted mb-0">Provide your job description (as file or text) and upload up to 10 candidate resumes in PDF or DOCX format.</p>
+                        </div>
+                        <div class="step-arrow d-none d-md-block">
+                            <i class="fas fa-arrow-right text-muted"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4 class="mb-3">AI Processing</h4>
+                            <p class="text-muted mb-0">Our AI analyzes the documents, extracting skills, experience, and qualifications to create detailed profiles.</p>
+                        </div>
+                        <div class="step-arrow d-none d-md-block">
+                            <i class="fas fa-arrow-right text-muted"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4 class="mb-3">Get Results</h4>
+                            <p class="text-muted mb-0">Receive ranked candidates with match scores and detailed reports highlighting strengths and gaps.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Section (Initially Hidden) -->
+    <section class="py-6 d-none" id="results-section">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="display-5 fw-bold mb-3">Top Matches</h2>
+                <p class="lead text-muted mx-auto" style="max-width: 700px;">AI has analyzed and ranked the candidates based on your job requirements.</p>
+            </div>
+            
+            <div class="row g-4 mb-5">
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-lg hover-effect best-fit-card">
+                        <div class="card-body text-center p-4">
+                            <div class="position-relative mb-4">
+                                <div class="score-circle best-fit mx-auto">
+                                    <span class="score-value" id="best-fit-score">85</span>
+                                </div>
+                                <div class="best-fit-badge">
+                                    <i class="fas fa-crown me-1"></i> Best Fit
+                                </div>
+                            </div>
+                            <h4 class="mb-3" id="best-fit-name">Sarah Johnson</h4>
+                            <div class="mb-3">
+                                <span class="badge bg-primary-light text-primary">Backend Developer</span>
+                                <span class="badge bg-primary-light text-primary">5+ Years Exp</span>
+                            </div>
+                            <p class="text-muted mb-4" id="best-fit-summary">Strong match with 9/10 required skills including Python, AWS, and Microservices.</p>
+                            <button class="btn btn-primary view-report-btn" data-candidate="1">
+                                <i class="fas fa-file-alt me-2"></i> View Full Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow hover-effect average-fit-card">
+                        <div class="card-body text-center p-4">
+                            <div class="position-relative mb-4">
+                                <div class="score-circle average-fit mx-auto">
+                                    <span class="score-value" id="average-fit-score">72</span>
+                                </div>
+                            </div>
+                            <h4 class="mb-3" id="average-fit-name">Michael Chen</h4>
+                            <div class="mb-3">
+                                <span class="badge bg-warning-light text-warning">Full Stack Dev</span>
+                                <span class="badge bg-warning-light text-warning">4 Years Exp</span>
+                            </div>
+                            <p class="text-muted mb-4" id="average-fit-summary">Good match with 7/10 required skills but lacks some specific backend expertise.</p>
+                            <button class="btn btn-outline-primary view-report-btn" data-candidate="2">
+                                <i class="fas fa-file-alt me-2"></i> View Full Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm hover-effect poor-fit-card">
+                        <div class="card-body text-center p-4">
+                            <div class="position-relative mb-4">
+                                <div class="score-circle poor-fit mx-auto">
+                                    <span class="score-value" id="poor-fit-score">45</span>
+                                </div>
+                            </div>
+                            <h4 class="mb-3" id="poor-fit-name">David Wilson</h4>
+                            <div class="mb-3">
+                                <span class="badge bg-danger-light text-danger">Frontend Dev</span>
+                                <span class="badge bg-danger-light text-danger">3 Years Exp</span>
+                            </div>
+                            <p class="text-muted mb-4" id="poor-fit-summary">Limited match with only 4/10 required skills, primarily frontend experience.</p>
+                            <button class="btn btn-outline-secondary view-report-btn" data-candidate="3">
+                                <i class="fas fa-file-alt me-2"></i> View Full Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <button class="btn btn-outline-primary btn-lg px-4 py-3 fw-medium" id="new-match-btn">
+                    <i class="fas fa-redo me-2"></i> Start New Analysis
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Report Modal -->
+    <div class="modal fade" id="reportModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="report-modal-title">Candidate Report - Sarah Johnson</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-0" id="report-modal-body">
+                    <div class="sticky-top bg-white shadow-sm p-3 border-bottom">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="badge bg-primary rounded-pill me-2">AI Score: 85</span>
+                                <span class="badge bg-success rounded-pill">Best Fit</span>
+                            </div>
+                            <button class="btn btn-sm btn-outline-primary" id="download-report-btn">
+                                <i class="fas fa-download me-1"></i> Download PDF
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="p-4" id="report-content">
+                        <!-- Content will be loaded dynamically -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Video Modal -->
+    <div class="modal fade" id="videoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Resume Ranker AI Demo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-0 ratio ratio-16x9">
+                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="mb-4">
+                        <img src="ai-logo-white.png" alt="Resume Ranker AI" height="32" class="me-2">
+                        <span class="fw-bold fs-5">Resume Ranker AI</span>
+                    </div>
+                    <p class="text-muted">Advanced AI-powered resume matching for recruiters and hiring managers to find the best candidates faster.</p>
+                    <div class="d-flex gap-3 mt-4">
+                        <a href="#" class="text-white"><i class="fab fa-twitter fs-5"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-linkedin fs-5"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-facebook fs-5"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <h5 class="mb-4">Product</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#upload-section" class="text-muted text-decoration-none">Features</a></li>
+                        <li class="mb-2"><a href="#how-it-works" class="text-muted text-decoration-none">How It Works</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Pricing</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Demo</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <h5 class="mb-4">Company</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none">About Us</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Careers</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Blog</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <h5 class="mb-4">Resources</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Help Center</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none">API Docs</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Community</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Status</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2">
+                    <h5 class="mb-4">Legal</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Privacy</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Terms</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Cookie Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4 bg-secondary">
+            <div class="text-center">
+                <p class="mb-0 text-muted">&copy; 2023 Resume Ranker AI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
+
+css---------->
+:root {
+    --primary-color: #4e73df;
+    --primary-light: #e8f1ff;
+    --secondary-color: #6c757d;
+    --success-color: #1cc88a;
+    --success-light: #e6f7f0;
+    --danger-color: #e74a3b;
+    --danger-light: #fbe9e8;
+    --warning-color: #f6c23e;
+    --warning-light: #fef8e6;
+    --info-color: #36b9cc;
+    --light-color: #f8f9fa;
+    --dark-color: #212529;
+    --gray-100: #f8f9fc;
+    --gray-200: #eaecf4;
+    --gray-300: #dddfeb;
+    --gray-400: #d1d3e2;
+    --gray-500: #b7b9cc;
+    --gray-600: #858796;
+    --gray-700: #6e707e;
+    --gray-800: #5a5c69;
+    --gray-900: #3a3b45;
+}
+
+body {
+    font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+    color: var(--gray-900);
+    padding-top: 72px;
+    background-color: #f8f9fc;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.display-4 {
+    font-weight: 800;
+}
+
+.lead {
+    font-weight: 400;
+}
+
+/* Navbar */
+.navbar {
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+}
+
+.bg-gradient-primary {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #224abe 100%);
+}
+
+.navbar-brand {
+    font-weight: 800;
+    letter-spacing: 0.5px;
+}
+
+/* Hero Section */
+.hero-section {
+    padding: 6rem 0;
+    background: linear-gradient(135deg, #f8f9fc 0%, #e8f1ff 100%);
+}
+
+.hero-image-container {
+    position: relative;
+}
+
+.hero-image-container img {
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.hero-image-container:hover img {
+    transform: scale(1.02);
+}
+
+.floating-badge {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    padding: 0.75rem 1.25rem;
+    border-radius: 50rem;
+    font-weight: 700;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Cards */
+.card {
+    border: none;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.hover-effect:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.1) !important;
+}
+
+.best-fit-card {
+    border-top: 4px solid var(--success-color);
+}
+
+.average-fit-card {
+    border-top: 4px solid var(--warning-color);
+}
+
+.poor-fit-card {
+    border-top: 4px solid var(--danger-color);
+}
+
+/* Score Circles */
+.score-circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 32px;
+    color: white;
+    position: relative;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+}
+
+.score-circle.best-fit {
+    background: linear-gradient(135deg, var(--success-color) 0%, #17a673 100%);
+}
+
+.score-circle.average-fit {
+    background: linear-gradient(135deg, var(--warning-color) 0%, #dda20a 100%);
+}
+
+.score-circle.poor-fit {
+    background: linear-gradient(135deg, var(--danger-color) 0%, #be2617 100%);
+}
+
+.score-value {
+    font-size: 42px;
+    font-weight: 800;
+}
+
+.best-fit-badge {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background-color: var(--success-color);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 50rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+}
+
+/* File Upload */
+.file-upload-area {
+    background-color: var(--gray-100);
+    border: 2px dashed var(--gray-300);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.file-upload-area:hover {
+    border-color: var(--primary-color);
+    background-color: rgba(78, 115, 223, 0.05);
+}
+
+.file-upload-area.drag-over {
+    border-color: var(--primary-color);
+    background-color: rgba(78, 115, 223, 0.1);
+}
+
+/* Badges */
+.badge {
+    font-weight: 600;
+    padding: 0.35em 0.65em;
+}
+
+.bg-primary-light {
+    background-color: var(--primary-light);
+}
+
+.bg-success-light {
+    background-color: var(--success-light);
+}
+
+.bg-warning-light {
+    background-color: var(--warning-light);
+}
+
+.bg-danger-light {
+    background-color: var(--danger-light);
+}
+
+/* Icons */
+.icon-circle {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+/* Steps */
+.step-card {
+    position: relative;
+    height: 100%;
+    padding: 1.5rem;
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+}
+
+.step-number {
+    width: 48px;
+    height: 48px;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.step-arrow {
+    position: absolute;
+    top: 50%;
+    right: -20px;
+    transform: translateY(-50%);
+    font-size: 24px;
+}
+
+/* Report Modal */
+#report-content {
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+}
+
+.skill-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.skill-table th, .skill-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.skill-table th {
+    background-color: var(--gray-100);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    color: var(--gray-600);
+}
+
+.skill-present {
+    color: var(--success-color);
+    font-weight: 700;
+}
+
+.skill-missing {
+    color: var(--danger-color);
+    font-weight: 700;
+}
+
+.skill-partial {
+    color: var(--warning-color);
+    font-weight: 700;
+}
+
+.match-meter {
+    height: 8px;
+    border-radius: 4px;
+    background-color: var(--gray-200);
+    overflow: hidden;
+}
+
+.match-meter-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--success-color), #4e73df);
+}
+
+/* Animations */
+.animate-delay-1 {
+    animation-delay: 0.1s;
+}
+
+.animate-delay-2 {
+    animation-delay: 0.2s;
+}
+
+.animate-delay-3 {
+    animation-delay: 0.3s;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .step-arrow {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding-top: 56px;
+    }
+    
+    .hero-section {
+        padding: 4rem 0;
+    }
+    
+    .score-circle {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .score-value {
+        font-size: 32px;
+    }
+}
+
+/* Toast Notification */
+.toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1100;
+}
+
+.toast {
+    border: none;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+/* Rating Stars */
+.rating-stars {
+    letter-spacing: 2px;
+}
+
+/* Progress Bar */
+.progress {
+    background-color: var(--gray-200);
+    border-radius: 0.5rem;
+}
+
+.progress-bar {
+    background-color: var(--primary-color);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--gray-100);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #3a5bd9;
+}
+
+jss------------>
+document.addEventListener('DOMContentLoaded', function() {
+    // DOM Elements
+    const loginForm = document.getElementById('login-form');
+    const signupForm = document.getElementById('signup-form');
+    const uploadForm = document.getElementById('upload-form');
+    const jdFileRadio = document.getElementById('jd-file');
+    const jdTextRadio = document.getElementById('jd-text');
+    const jdFileGroup = document.getElementById('jd-file-group');
+    const jdTextInput = document.getElementById('jd-text-input');
+    const jdFileInput = document.getElementById('jd-file-input');
+    const jdFileInfo = document.getElementById('jd-file-info');
+    const browseJdBtn = document.getElementById('browse-jd-btn');
+    const resumesInput = document.getElementById('resumes-input');
+    const resumesFileInfo = document.getElementById('resumes-file-info');
+    const browseResumesBtn = document.getElementById('browse-resumes-btn');
+    const uploadBtn = document.getElementById('upload-btn');
+    const uploadSpinner = document.getElementById('upload-spinner');
+    const resultsSection = document.getElementById('results-section');
+    const getStartedBtn = document.getElementById('get-started-btn');
+    const newMatchBtn = document.getElementById('new-match-btn');
+    const reportModal = new bootstrap.Modal(document.getElementById('reportModal'));
+    const authButtons = document.getElementById('auth-buttons');
+    const userProfile = document.getElementById('user-profile');
+    const usernameDisplay = document.getElementById('username-display');
+    const logoutBtn = document.getElementById('logout-btn');
+    const togglePassword = document.getElementById('togglePassword');
+    const toggleSignupPassword = document.getElementById('toggleSignupPassword');
+    const signupPassword = document.getElementById('signup-password');
+    const passwordStrengthBar = document.getElementById('password-strength-bar');
+    const passwordStrengthText = document.getElementById('password-strength-text');
+    const downloadReportBtn = document.getElementById('download-report-btn');
+    
+    // File upload areas
+    const jdUploadArea = jdFileGroup.querySelector('.file-upload-area');
+    const resumesUploadArea = document.querySelector('#resumes-input').parentElement;
+    
+    // Check if user is logged in (in a real app, this would check localStorage/sessionStorage)
+    let isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+    
+    // Initialize UI based on login state
+    function updateAuthUI() {
+        if (isLoggedIn && currentUser) {
+            authButtons.classList.add('d-none');
+            userProfile.classList.remove('d-none');
+            usernameDisplay.textContent = currentUser.name;
+        } else {
+            authButtons.classList.remove('d-none');
+            userProfile.classList.add('d-none');
+        }
+    }
+    
+    // Toggle password visibility
+    function setupPasswordToggle(button, input) {
+        button.addEventListener('click', function() {
+            const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+            input.setAttribute('type', type);
+            button.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+        });
+    }
+    
+    // Check password strength
+    function checkPasswordStrength(password) {
+        let strength = 0;
+        
+        // Length check
+        if (password.length >= 8) strength += 1;
+        if (password.length >= 12) strength += 1;
+        
+        // Contains numbers
+        if (/\d/.test(password)) strength += 1;
+        
+        // Contains lowercase and uppercase
+        if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength += 1;
+        
+        // Contains special chars
+        if (/[^a-zA-Z0-9]/.test(password)) strength += 1;
+        
+        return strength;
+    }
+    
+    // Update password strength indicator
+    signupPassword.addEventListener('input', function() {
+        const strength = checkPasswordStrength(this.value);
+        const strengthPercent = strength * 20;
+        
+        passwordStrengthBar.style.width = strengthPercent + '%';
+        
+        if (strength <= 1) {
+            passwordStrengthBar.className = 'progress-bar bg-danger';
+            passwordStrengthText.textContent = 'Weak';
+        } else if (strength <= 3) {
+            passwordStrengthBar.className = 'progress-bar bg-warning';
+            passwordStrengthText.textContent = 'Moderate';
+        } else {
+            passwordStrengthBar.className = 'progress-bar bg-success';
+            passwordStrengthText.textContent = 'Strong';
+        }
+    });
+    
+    // Toggle between JD file and text input
+    jdFileRadio.addEventListener('change', function() {
+        if (this.checked) {
+            jdFileGroup.classList.remove('d-none');
+            jdTextInput.classList.add('d-none');
+        }
+    });
+    
+    jdTextRadio.addEventListener('change', function() {
+        if (this.checked) {
+            jdFileGroup.classList.add('d-none');
+            jdTextInput.classList.remove('d-none');
+        }
+    });
+    
+    // Handle JD file upload
+    browseJdBtn.addEventListener('click', function() {
+        jdFileInput.click();
+    });
+    
+    jdFileInput.addEventListener('change', function() {
+        if (this.files.length > 0) {
+            const file = this.files[0];
+            if (file.size > 5 * 1024 * 1024) {
+                showToast('File size exceeds 5MB limit', 'danger');
+                this.value = '';
+                jdFileInfo.innerHTML = '';
+                return;
+            }
+            
+            jdFileInfo.innerHTML = `
+                <div class="alert alert-success d-flex align-items-center p-2">
+                    <i class="fas fa-check-circle me-2"></i>
+                    <div>
+                        <strong>${file.name}</strong> (${(file.size / 1024).toFixed(1)} KB)
+                    </div>
+                </div>
+            `;
+        }
+    });
+    
+    // Handle drag and drop for JD file
+    jdUploadArea.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        this.classList.add('drag-over');
+    });
+    
+    jdUploadArea.addEventListener('dragleave', function() {
+        this.classList.remove('drag-over');
+    });
+    
+    jdUploadArea.addEventListener('drop', function(e) {
+        e.preventDefault();
+        this.classList.remove('drag-over');
+        
+        if (e.dataTransfer.files.length > 0) {
+            jdFileInput.files = e.dataTransfer.files;
+            const event = new Event('change');
+            jdFileInput.dispatchEvent(event);
+        }
+    });
+    
+    // Handle resumes file upload
+    browseResumesBtn.addEventListener('click', function() {
+        resumesInput.click();
+    });
+    
+    resumesInput.addEventListener('change', function() {
+        if (this.files.length > 10) {
+            showToast('You can upload a maximum of 10 resumes', 'danger');
+            this.value = '';
+            resumesFileInfo.innerHTML = '';
+            return;
+        }
+        
+        let oversized = false;
+        for (let file of this.files) {
+            if (file.size > 5 * 1024 * 1024) {
+                oversized = true;
+                break;
+            }
+        }
+        
+        if (oversized) {
+            showToast('One or more files exceed 5MB limit', 'danger');
+            this.value = '';
+            resumesFileInfo.innerHTML = '';
+            return;
+        }
+        
+        if (this.files.length > 0) {
+            let fileListHTML = '<div class="alert alert-success p-2"><ul class="mb-0">';
+            
+            for (let file of this.files) {
+                fileListHTML += `<li><strong>${file.name}</strong> (${(file.size / 1024).toFixed(1)} KB)</li>`;
+            }
+            
+            fileListHTML += '</ul></div>';
+            resumesFileInfo.innerHTML = fileListHTML;
+        }
+    });
+    
+    // Handle drag and drop for resumes
+    resumesUploadArea.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        this.classList.add('drag-over');
+    });
+    
+    resumesUploadArea.addEventListener('dragleave', function() {
+        this.classList.remove('drag-over');
+    });
+    
+    resumesUploadArea.addEventListener('drop', function(e) {
+        e.preventDefault();
+        this.classList.remove('drag-over');
+        
+        if (e.dataTransfer.files.length > 0) {
+            resumesInput.files = e.dataTransfer.files;
+            const event = new Event('change');
+            resumesInput.dispatchEvent(event);
+        }
+    });
+    
+    // Setup password toggles
+    setupPasswordToggle(togglePassword, document.getElementById('login-password'));
+    setupPasswordToggle(toggleSignupPassword, document.getElementById('signup-password'));
+    
+    // Login form submission
+    loginForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+        const rememberMe = document.getElementById('remember-me').checked;
+        const loginSpinner = document.getElementById('login-spinner');
+        
+        // Validate inputs
+        if (!email || !password) {
+            showToast('Please enter both email and password', 'danger');
+            return;
+        }
+        
+        // Show loading state
+        loginSpinner.classList.remove('d-none');
+        this.querySelector('button[type="submit"]').disabled = true;
+        
+        try {
+            // In a real app, this would be an API call to your backend
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            // Simulate successful login
+            isLoggedIn = true;
+            currentUser = { 
+                name: email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1),
+                email: email 
+            };
+            
+            // Store login state
+            if (rememberMe) {
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            } else {
+                sessionStorage.setItem('isLoggedIn', 'true');
+                sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+            }
+            
+            updateAuthUI();
+            bootstrap.Modal.getInstance(document.getElementById('loginModal')).hide();
+            loginForm.reset();
+            showToast('Login successful!', 'success');
+            
+            // Scroll to upload section
+            document.getElementById('upload-section').scrollIntoView({ behavior: 'smooth' });
+        } catch (error) {
+            console.error('Login error:', error);
+            showToast('Invalid email or password', 'danger');
+        } finally {
+            loginSpinner.classList.add('d-none');
+            this.querySelector('button[type="submit"]').disabled = false;
+        }
+    });
+    
+    // Signup form submission
+    signupForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const name = document.getElementById('signup-name').value;
+        const email = document.getElementById('signup-email').value;
+        const password = document.getElementById('signup-password').value;
+        const confirmPassword = document.getElementById('signup-confirm-password').value;
+        const termsAgree = document.getElementById('terms-agree').checked;
+        const signupSpinner = document.getElementById('signup-spinner');
+        
+        // Validate inputs
+        if (!name || !email || !password || !confirmPassword) {
+            showToast('Please fill all fields', 'danger');
+            return;
+        }
+        
+        if (password !== confirmPassword) {
+            showToast('Passwords do not match', 'danger');
+            return;
+        }
+        
+        if (!termsAgree) {
+            showToast('You must agree to the terms and conditions', 'danger');
+            return;
+        }
+        
+        // Show loading state
+        signupSpinner.classList.remove('d-none');
+        this.querySelector('button[type="submit"]').disabled = true;
+        
+        try {
+            // In a real app, this would be an API call to your backend
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            // Simulate successful signup and automatic login
+            isLoggedIn = true;
+            currentUser = { name: name, email: email };
+            
+            // Store user data (in a real app, this would be handled by backend)
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            
+            updateAuthUI();
+            bootstrap.Modal.getInstance(document.getElementById('signupModal')).hide();
+            signupForm.reset();
+            showToast('Account created successfully!', 'success');
+            
+            // Scroll to upload section
+            document.getElementById('upload-section').scrollIntoView({ behavior: 'smooth' });
+        } catch (error) {
+            console.error('Signup error:', error);
+            showToast('Error creating account. Please try again.', 'danger');
+        } finally {
+            signupSpinner.classList.add('d-none');
+            this.querySelector('button[type="submit"]').disabled = false;
+        }
+    });
+    
+    // Logout button
+    logoutBtn.addEventListener('click', function() {
+        isLoggedIn = false;
+        currentUser = null;
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('currentUser');
+        sessionStorage.removeItem('isLoggedIn');
+        sessionStorage.removeItem('currentUser');
+        updateAuthUI();
+        showToast('Logged out successfully', 'info');
+    });
+    
+    // Get Started button scroll to upload section
+    getStartedBtn.addEventListener('click', function() {
+        if (!isLoggedIn) {
+            showToast('Please login to start analyzing resumes', 'warning');
+            return;
+        }
+        document.getElementById('upload-section').scrollIntoView({ behavior: 'smooth' });
+    });
+    
+    // Upload form submission
+    uploadForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        if (!isLoggedIn) {
+            showToast('Please login to upload and match resumes', 'warning');
+            return;
+        }
+        
+        // Validate inputs
+        const jdFile = jdFileRadio.checked ? jdFileInput.files[0] : null;
+        const jdText = jdTextRadio.checked ? jdTextInput.value : null;
+        const resumes = resumesInput.files;
+        
+        if ((jdFileRadio.checked && !jdFile) || (jdTextRadio.checked && !jdText.trim())) {
+            showToast('Please provide a job description', 'warning');
+            return;
+        }
+        
+        if (!resumes || resumes.length === 0) {
+            showToast('Please upload at least one resume', 'warning');
+            return;
+        }
+        
+        // Show loading state
+        uploadBtn.disabled = true;
+        uploadSpinner.classList.remove('d-none');
+        
+        try {
+            // Prepare form data for API call
+            const formData = new FormData();
+            if (jdFile) formData.append('jd_file', jdFile);
+            if (jdText) formData.append('jd_text', jdText);
+            for (let i = 0; i < resumes.length; i++) {
+                formData.append('resumes', resumes[i]);
+            }
+            
+            // In a real app, this would be an API call to your backend
+            // const response = await fetch('http://localhost:8000/v1/upload', {
+            //     method: 'POST',
+            //     body: formData
+            // });
+            
+            // const data = await response.json();
+            
+            // For demo purposes, we'll use sample data after a delay
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            const data = { success: true, job_description_id: 'demo123' };
+            
+            if (data.success) {
+                // Now get the matching results
+                // const matchResponse = await fetch('http://localhost:8000/v1/match', {
+                //     method: 'POST',
+                //     headers: {
+                //         'Content-Type': 'application/json'
+                //     },
+                //     body: JSON.stringify({
+                //         job_description_id: data.job_description_id
+                //     })
+                // });
+                
+                // const matchData = await matchResponse.json();
+                
+                // For demo, we'll generate sample matching data
+                const matchData = generateSampleMatchData(jdText || "Backend Developer with Python and Java experience");
+                
+                displayResults(matchData);
+                showToast('Resumes analyzed successfully!', 'success');
+            } else {
+                throw new Error('Upload failed');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showToast('An error occurred. Please try again.', 'danger');
+        } finally {
+            uploadBtn.disabled = false;
+            uploadSpinner.classList.add('d-none');
+        }
+    });
+    
+    // Generate sample match data based on job description
+    function generateSampleMatchData(jdText) {
+        const skills = [
+            "Bachelor's degree (CS/related)",
+            "Backend development experience (3+ years)",
+            "Python (for backend development)",
+            "Java (for backend development)",
+            "Node.js (for backend development)",
+            "RESTful services/APIs",
+            "Microservices architecture",
+            "Database Optimization (MySQL/PostgreSQL)",
+            "Docker",
+            "AWS"
+        ];
+        
+        // Determine focus from JD text
+        const isPythonFocused = jdText.toLowerCase().includes('python');
+        const isJavaFocused = jdText.toLowerCase().includes('java');
+        const isNodeFocused = jdText.toLowerCase().includes('node');
+        
+        const candidates = [
+            {
+                name: "Sarah Johnson",
+                score: 85 + Math.floor(Math.random() * 5),
+                fit: "Best Fit",
+                summary: "Strong match with 9/10 required skills including Python, AWS, and Microservices.",
+                report: {
+                    experienceMatch: `${isPythonFocused ? "Sarah has 5+ years of Python backend development experience" : 
+                                    isJavaFocused ? "Sarah has 5+ years of Java backend development experience" : 
+                                    "Sarah has 5+ years of backend development experience"} working with scalable systems at TechCorp and InnovateSoft. She has designed and implemented microservices architectures and optimized database performance for high-traffic applications.`,
+                    educationMatch: "Sarah holds a Bachelor's degree in Computer Science from State University with honors.",
+                    aiJustification: `Sarah matches ${isPythonFocused ? "exceptionally well" : "very well"} with the required skills. Her experience with ${isPythonFocused ? "Python" : isJavaFocused ? "Java" : "backend technologies"}, cloud infrastructure, and system design makes her an excellent fit. The AI detected strong alignment with all key requirements.`,
+                    skills: skills.map(skill => {
+                        let status;
+                        if (skill.includes("Bachelor")) status = "Present";
+                        else if (skill.includes("Backend experience")) status = "Present";
+                        else if (skill.includes("Python") && isPythonFocused) status = "Present";
+                        else if (skill.includes("Java") && isJavaFocused) status = "Present";
+                        else if (skill.includes("Node") && isNodeFocused) status = "Present";
+                        else if (skill.includes("REST")) status = "Present";
+                        else if (skill.includes("Micro")) status = "Present";
+                        else if (skill.includes("Database")) status = "Present";
+                        else if (skill.includes("Docker")) status = "Present";
+                        else if (skill.includes("AWS")) status = "Present";
+                        else status = Math.random() > 0.7 ? "Present" : Math.random() > 0.4 ? "Partially Present" : "Missing";
+                        
+                        return {
+                            skill: skill,
+                            requirement: "Required",
+                            candidate_status: status
+                        };
+                    })
+                }
+            },
+            {
+                name: "Michael Chen",
+                score: 65 + Math.floor(Math.random() * 10),
+                fit: "Average Fit",
+                summary: "Good match with 7/10 required skills but lacks some specific backend expertise.",
+                report: {
+                    experienceMatch: "Michael has 4 years of full-stack development experience with exposure to backend technologies. While he hasn't worked extensively with microservices, he has contributed to API development and database optimization projects.",
+                    educationMatch: "Michael holds a Bachelor's degree in Information Technology from City College.",
+                    aiJustification: "Michael shows potential with core backend skills but lacks depth in some specific technologies required for this role. His experience with related technologies suggests he could ramp up quickly with proper onboarding.",
+                    skills: skills.map(skill => {
+                        let status;
+                        if (skill.includes("Bachelor")) status = "Present";
+                        else if (skill.includes("Backend experience")) status = "Partially Present";
+                        else if (skill.includes("Python") || skill.includes("Java")) status = Math.random() > 0.6 ? "Present" : "Partially Present";
+                        else if (skill.includes("Node")) status = "Present";
+                        else if (skill.includes("REST")) status = "Present";
+                        else if (skill.includes("Micro")) status = "Partially Present";
+                        else if (skill.includes("Database")) status = "Partially Present";
+                        else if (skill.includes("Docker")) status = "Present";
+                        else if (skill.includes("AWS")) status = "Present";
+                        else status = Math.random() > 0.5 ? "Present" : "Missing";
+                        
+                        return {
+                            skill: skill,
+                            requirement: "Required",
+                            candidate_status: status
+                        };
+                    })
+                }
+            },
+            {
+                name: "David Wilson",
+                score: 40 + Math.floor(Math.random() * 10),
+                fit: "Poor Fit",
+                summary: "Limited match with only 4/10 required skills, primarily frontend experience.",
+                report: {
+                    experienceMatch: "David has 3 years of frontend development experience with limited exposure to backend technologies. His resume shows some coursework in backend development but no professional experience.",
+                    educationMatch: "David completed a coding bootcamp with focus on frontend technologies after earning an Associate's degree in Computer Science.",
+                    aiJustification: "David's skills and experience are primarily frontend-focused, with limited alignment to the backend requirements of this role. While he shows potential for growth, he would require significant training to meet the position's demands.",
+                    skills: skills.map(skill => {
+                        let status;
+                        if (skill.includes("Bachelor")) status = "Missing";
+                        else if (skill.includes("Backend experience")) status = "Missing";
+                        else if (skill.includes("Python") || skill.includes("Java")) status = "Missing";
+                        else if (skill.includes("Node")) status = "Present";
+                        else if (skill.includes("REST")) status = "Partially Present";
+                        else if (skill.includes("Micro")) status = "Missing";
+                        else if (skill.includes("Database")) status = "Missing";
+                        else if (skill.includes("Docker")) status = "Partially Present";
+                        else if (skill.includes("AWS")) status = "Missing";
+                        else status = "Missing";
+                        
+                        return {
+                            skill: skill,
+                            requirement: "Required",
+                            candidate_status: status
+                        };
+                    })
+                }
+            }
+        ];
+        
+        return { candidates };
+    }
+    
+    // Display results
+    function displayResults(data) {
+        const candidates = data.candidates;
+        
+        // Update the top candidates
+        document.getElementById('best-fit-name').textContent = candidates[0].name;
+        document.getElementById('best-fit-score').textContent = candidates[0].score;
+        document.getElementById('best-fit-summary').textContent = candidates[0].summary;
+        
+        document.getElementById('average-fit-name').textContent = candidates[1].name;
+        document.getElementById('average-fit-score').textContent = candidates[1].score;
+        document.getElementById('average-fit-summary').textContent = candidates[1].summary;
+        
+        document.getElementById('poor-fit-name').textContent = candidates[2].name;
+        document.getElementById('poor-fit-score').textContent = candidates[2].score;
+        document.getElementById('poor-fit-summary').textContent = candidates[2].summary;
+        
+        // Animate results section
+        resultsSection.classList.remove('d-none');
+        resultsSection.classList.add('animate__animated', 'animate__fadeIn');
+        resultsSection.scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    // New Match button
+    newMatchBtn.addEventListener('click', function() {
+        resultsSection.classList.add('animate__animated', 'animate__fadeOut');
+        
+        setTimeout(() => {
+            resultsSection.classList.add('d-none');
+            resultsSection.classList.remove('animate__animated', 'animate__fadeOut', 'animate__fadeIn');
+            document.getElementById('upload-section').scrollIntoView({ behavior: 'smooth' });
+            uploadForm.reset();
+            jdFileInfo.innerHTML = '';
+            resumesFileInfo.innerHTML = '';
+        }, 500);
+    });
+    
+    // View Report buttons
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('view-report-btn')) {
+            const candidateIndex = parseInt(e.target.getAttribute('data-candidate')) - 1;
+            const candidate = generateSampleMatchData("").candidates[candidateIndex];
+            showReportModal(candidate);
+        }
+    });
+    
+    // Download Report button
+    downloadReportBtn.addEventListener('click', function() {
+        showToast('Report download started', 'info');
+        // In a real app, this would generate and download a PDF report
+    });
+    
+    // Show report modal
+    function showReportModal(candidate) {
+        const modalTitle = document.getElementById('report-modal-title');
+        const reportContent = document.getElementById('report-content');
+        
+        modalTitle.textContent = `Candidate Report - ${candidate.name}`;
+        
+        // Calculate match percentage
+        const totalSkills = candidate.report.skills.length;
+        const matchedSkills = candidate.report.skills.filter(s => s.candidate_status === 'Present').length;
+        const matchPercentage = Math.round((matchedSkills / totalSkills) * 100);
+        
+        // Create report content
+        let reportHTML = `
+            <div class="mb-5">
+                <div class="row align-items-center mb-4">
+                    <div class="col-md-6">
+                        <h3 class="mb-0">${candidate.name}</h3>
+                        <p class="text-muted mb-md-0">${candidate.fit} • AI Score: ${candidate.score}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center justify-content-md-end">
+                            <div class="me-3">
+                                <div class="text-center">
+                                    <div class="fs-2 fw-bold">${matchPercentage}%</div>
+                                    <small class="text-muted">Match</small>
+                                </div>
+                            </div>
+                            <div style="width: 150px;">
+                                <div class="match-meter mb-1">
+                                    <div class="match-meter-fill" style="width: ${matchPercentage}%"></div>
+                                </div>
+                                <small class="text-muted">${matchedSkills} of ${totalSkills} skills matched</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary mb-3"><i class="fas fa-briefcase me-2"></i>Experience Match</h5>
+                        <p class="card-text">${candidate.report.experienceMatch}</p>
+                    </div>
+                </div>
+                
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary mb-3"><i class="fas fa-graduation-cap me-2"></i>Education Match</h5>
+                        <p class="card-text">${candidate.report.educationMatch}</p>
+                    </div>
+                </div>
+                
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary mb-3"><i class="fas fa-robot me-2"></i>AI Justification</h5>
+                        <p class="card-text">${candidate.report.aiJustification}</p>
+                    </div>
+                </div>
+                
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary mb-3"><i class="fas fa-star me-2"></i>Skills Comparison</h5>
+                        <div class="table-responsive">
+                            <table class="table skill-table">
+                                <thead>
+                                    <tr>
+                                        <th>Skill</th>
+                                        <th>Requirement</th>
+                                        <th>Candidate Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+        `;
+        
+        candidate.report.skills.forEach(skill => {
+            let statusClass = '';
+            if (skill.candidate_status === 'Present') statusClass = 'skill-present';
+            else if (skill.candidate_status === 'Missing') statusClass = 'skill-missing';
+            else if (skill.candidate_status.includes('Partially')) statusClass = 'skill-partial';
+            
+            reportHTML += `
+                <tr>
+                    <td>${skill.skill}</td>
+                    <td>${skill.requirement}</td>
+                    <td class="${statusClass}">
+                        ${skill.candidate_status}
+                        ${skill.candidate_status === 'Present' ? '<i class="fas fa-check-circle ms-2"></i>' : 
+                         skill.candidate_status === 'Missing' ? '<i class="fas fa-times-circle ms-2"></i>' : 
+                         '<i class="fas fa-exclamation-circle ms-2"></i>'}
+                    </td>
+                </tr>
+            `;
+        });
+        
+        reportHTML += `
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        reportContent.innerHTML = reportHTML;
+        reportModal.show();
+    }
+    
+    // Show toast notification
+    function showToast(message, type) {
+        const toastContainer = document.createElement('div');
+        toastContainer.className = 'toast-container';
+        
+        const toast = document.createElement('div');
+        toast.className = `toast show align-items-center text-white bg-${type} border-0`;
+        toast.role = 'alert';
+        toast.ariaLive = 'assertive';
+        toast.ariaAtomic = 'true';
+        
+        toast.innerHTML = `
+            <div class="d-flex">
+                <div class="toast-body d-flex align-items-center">
+                    ${type === 'success' ? '<i class="fas fa-check-circle me-2"></i>' : 
+                     type === 'danger' ? '<i class="fas fa-exclamation-circle me-2"></i>' : 
+                     type === 'warning' ? '<i class="fas fa-exclamation-triangle me-2"></i>' : 
+                     '<i class="fas fa-info-circle me-2"></i>'}
+                    ${message}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        `;
+        
+        toastContainer.appendChild(toast);
+        document.body.appendChild(toastContainer);
+        
+        // Auto-remove after 5 seconds
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => {
+                document.body.removeChild(toastContainer);
+            }, 300);
+        }, 5000);
+        
+        // Close button
+        toast.querySelector('[data-bs-dismiss="toast"]').addEventListener('click', () => {
+            toast.classList.remove('show');
+            setTimeout(() => {
+                document.body.removeChild(toastContainer);
+            }, 300);
+        });
+    }
+    
+    // Initialize UI
+    updateAuthUI();
+    
+    // Animate elements on scroll
+    const animateOnScroll = function() {
+        const elements = document.querySelectorAll('.animate-on-scroll');
+        
+        elements.forEach(element => {
+            const elementPosition = element.getBoundingClientRect().top;
+            const screenPosition = window.innerHeight / 1.2;
+            
+            if (elementPosition < screenPosition) {
+                element.classList.add('animate__animated', 'animate__fadeInUp');
+            }
+        });
+    };
+    
+    window.addEventListener('scroll', animateOnScroll);
+    animateOnScroll(); // Run once on page load
+});
